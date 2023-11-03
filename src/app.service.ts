@@ -25,6 +25,10 @@ export class AppService {
 		try {
 			const passwordHash = await this.hashPassword(body.password)
 			const apiToken = randomUUID()
+			const user = await this.usersRepository.findOneBy({
+				fio: body.fio
+			})
+			if (user) return res.status(409).send('User already exists')
 			await this.usersRepository.save({
 				fio: body.fio,
 				login: body.login,
